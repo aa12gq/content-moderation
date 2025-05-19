@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/aa12gq/content-moderation/proto/gen"
+	pb "content-moderation/proto/gen"
 )
 
 var (

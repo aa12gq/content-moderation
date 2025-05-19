@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package contentmoderation;
 
+option go_package = "content-moderation/proto/gen";
+
 service ContentModerationService {
   // 同步审核接口
   rpc ModerateContent (ModerationRequest) returns (ModerationResponse) {}

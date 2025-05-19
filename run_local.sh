@@ -25,9 +25,18 @@ if ! command -v go &> /dev/null; then
     exit 1
 fi
 
+# 检查protoc
+if ! command -v protoc &> /dev/null; then
+    echo "错误: 未找到protoc，请先安装protoc"
+    echo "可以使用以下命令安装:"
+    echo "brew install protobuf"
+    exit 1
+fi
+
 # 确保目录结构
 mkdir -p models
 mkdir -p logs
+mkdir -p scripts
 
 # 创建并激活Python虚拟环境
 if [ ! -d "venv" ]; then
@@ -41,6 +50,11 @@ source venv/bin/activate
 # 准备Python环境
 echo "检查Python依赖..."
 pip install -r requirements.txt
+
+# 生成proto文件
+echo "生成proto文件..."
+chmod +x scripts/generate_proto.sh
+./scripts/generate_proto.sh
 
 # 启动NLP服务（后台运行）
 echo "启动NLP服务..."
