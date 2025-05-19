@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  nlp-service:
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile.nlp
+    ports:
+      - "50052:50052"
+    environment:
+      - SERVICE_PORT=50052
+    volumes:
+      - ./models:/app/models
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "50052"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  rpc-service:
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile.go
+    ports:
+      - "50051:50051"
+    environment:
+      - SERVICE_PORT=50051
+      - NLP_SERVICE_ADDR=nlp-service:50052
+    depends_on:
+      - nlp-service
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "50051"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

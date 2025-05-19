@@ -1,0 +1,2 @@
+main.go:18:2: no required module provides package github.com/aa12gq/content-moderation/proto/gen; to add it:
+	go get github.com/aa12gq/content-moderation/proto/gen

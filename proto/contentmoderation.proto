@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package contentmoderation;
+
+service ContentModerationService {
+  // 同步审核接口
+  rpc ModerateContent (ModerationRequest) returns (ModerationResponse) {}
+  
+  // 异步审核接口
+  rpc ModerateContentAsync (ModerationRequest) returns (AsyncModerationResponse) {}
+  
+  // 获取异步审核结果
+  rpc GetModerationResult (ResultRequest) returns (ModerationResponse) {}
+  
+  // 批量审核接口
+  rpc ModerateBatchContent (BatchModerationRequest) returns (BatchModerationResponse) {}
+}
+
+message ModerationRequest {
+  string content_id = 1;
+  string content = 2;
+  string content_type = 3;  // text, image_url, etc.
+  repeated string categories = 4;  // 指定需要检测的类别
+  map<string, string> metadata = 5;
+}
+
+message ModerationResponse {
+  string content_id = 1;
+  bool is_approved = 2;
+  repeated CategoryResult category_results = 3;
+  string rejection_reason = 4;
+  float confidence_score = 5;
+  map<string, string> metadata = 6;
+}
+
+message CategoryResult {
+  string category = 1;
+  bool detected = 2;
+  float confidence = 3;
+  repeated string matched_keywords = 4;
+}
+
+message AsyncModerationResponse {
+  string request_id = 1;
+  string status = 2;
+}
+
+message ResultRequest {
+  string request_id = 1;
+}
+
+message BatchModerationRequest {
+  repeated ModerationRequest requests = 1;
+}
+
+message BatchModerationResponse {
+  repeated ModerationResponse responses = 1;
+} 
