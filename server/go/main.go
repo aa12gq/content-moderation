@@ -12,6 +12,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 
 	pb "content-moderation/proto/gen"
@@ -197,6 +198,10 @@ func main() {
 		nlpClient: nlpClient,
 		cache:     newResultCache(),
 	})
+
+	// 注册反射服务
+	reflection.Register(s)
+	log.Printf("已启用gRPC反射服务")
 
 	log.Printf("RPC服务器准备就绪，监听端口: %d", *port)
 	if err := s.Serve(lis); err != nil {
